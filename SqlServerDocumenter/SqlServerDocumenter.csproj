@@ -8,4 +8,8 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\SqlServerDocumenter.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="140.17199.0" />
+  </ItemGroup>
+
 </Project>

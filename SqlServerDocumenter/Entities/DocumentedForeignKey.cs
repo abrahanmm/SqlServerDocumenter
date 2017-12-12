@@ -14,7 +14,7 @@ namespace SqlServerDocumenter.Entities
 		/// </summary>
 		/// <param name="name">Name of the foreign key.</param>
 		/// <param name="cols">List of the columns included in the foreign key.</param>
-		public DocumentedForeignKey(string name, IList<string> cols)
+		public DocumentedForeignKey(string name, string[] cols)
 		{
 			this.Name = name;
 			this.Columns = cols;
@@ -28,6 +28,6 @@ namespace SqlServerDocumenter.Entities
 		/// <summary>
 		/// List of the columns included in the foreign key.
 		/// </summary>
-		public IList<string> Columns { get; }
+		public IEnumerable<string> Columns { get; }
 	}
 }
