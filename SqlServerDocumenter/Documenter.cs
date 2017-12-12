@@ -5,6 +5,7 @@ using SqlServerDocumenter.Entities;
 using Microsoft.SqlServer.Management.Smo;
 using SqlServerDocumenter.Infraestructure;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Options;
 
 namespace SqlServerDocumenter
 {
@@ -21,6 +22,15 @@ namespace SqlServerDocumenter
 		{
 			this._configuration = configuration;
 		}
+
+        /// <summary>
+        /// Contructor to api
+        /// </summary>
+        /// <param name="configuration">Configuration of application</param>
+        public SqlDocumenter(IOptionsSnapshot<SqlDocumenterConfiguration> configuration)
+        {
+            this._configuration = configuration.Value;
+        }
 
 		/// <inheritdoc />
 		public DocumentedDatabase GetDatabase(string serverName, string databaseName)

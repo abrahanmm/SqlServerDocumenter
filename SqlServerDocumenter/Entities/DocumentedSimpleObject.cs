@@ -18,7 +18,6 @@ namespace SqlServerDocumenter.Entities
 		/// <param name="objectName">Name of the database object.</param>
 		/// <param name="schemaName">Name of the database schema to which the object belongs.</param>
 		/// <param name="description">Description of the database object</param>
-		/// <param name="type">Type of the database object (table, view or stored procedure)</param>
 		public DocumentedSimpleObject(string serverName, string databaseName, string objectName, string schemaName, string description)
 		{
 			this.ServerName = serverName;
