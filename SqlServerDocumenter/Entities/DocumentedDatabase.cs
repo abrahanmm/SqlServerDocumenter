@@ -14,10 +14,12 @@ namespace SqlServerDocumenter.Entities
 		/// </summary>
 		/// <param name="serverName">Name of the server that includes the database name</param>
 		/// <param name="databaseName">Name of the database</param>
-		public DocumentedDatabase(string serverName, string databaseName)
+		/// <param name="description">Description of the database</param>
+		public DocumentedDatabase(string serverName, string databaseName, string description)
 		{
 			this.ServerName = serverName;
 			this.Name = databaseName;
+			this.Description = description;
 		}
 
 		/// <summary>

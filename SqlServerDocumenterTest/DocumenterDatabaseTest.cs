@@ -1,24 +1,25 @@
-using SqlServerDocumenter;
+﻿using SqlServerDocumenter;
 using SqlServerDocumenter.Entities;
-using SqlServerDocumenter.Infraestructure;
 using SqlServerDocumenterTest.Infraestructure;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using Xunit;
 
 namespace SqlServerDocumenterTest
 {
-	public class DocumenterTest
+	public class DocumenterDatabaseTest
 	{
 		[Fact]
-		public void GetTable()
+		public void GetDatabase()
 		{
 			//Arrange
 			ObjectMother.RestoreDatabase();
 			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
 			//Act
-			DocumentedTable table = documenter.GetTable(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.TableName);
+			DocumentedDatabase database = documenter.GetDatabase(ObjectMother.ServerName, ObjectMother.DatabaseName);
 			//Assert
-			Assert.Equal(table.Name, ObjectMother.TableName);
+			Assert.Equal(database.Name, ObjectMother.DatabaseName);
 		}
 	}
 }

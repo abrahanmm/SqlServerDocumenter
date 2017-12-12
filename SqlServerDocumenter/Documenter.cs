@@ -24,7 +24,11 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public DocumentedDatabase GetDatabase(string serverName, string databaseName)
 		{
-			throw new NotImplementedException();
+			Database database = this.GetSMODatabase(serverName, databaseName);
+			if (!database.IsSystemObject)
+				return new DocumentedDatabase(serverName, database.Name, this.GetDesciption(database.ExtendedProperties));
+			else
+				return null;
 		}
 
 		/// <inheritdoc />
@@ -42,7 +46,8 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public DocumentedStoredProcedure GetStoredProcedure(string serverName, string databaseName, string schema, string storedProcedureName)
 		{
-			throw new NotImplementedException();
+			StoredProcedure procedure = this.GetSMOProcedure(serverName, databaseName, schema, storedProcedureName);
+			return new DocumentedStoredProcedure(serverName, databaseName, storedProcedureName, schema, this.GetDesciption(procedure.ExtendedProperties));
 		}
 
 		/// <inheritdoc />
@@ -90,7 +95,15 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public DocumentedView GetView(string serverName, string databaseName, string schema, string viewName)
 		{
-			throw new NotImplementedException();
+			View view = this.GetSMOView(serverName, databaseName, schema, viewName);
+			DocumentedView documentedView = new DocumentedView(serverName, databaseName, viewName, schema, this.GetDesciption(view.ExtendedProperties));
+
+			foreach (Column col in view.Columns)
+			{
+				documentedView.Columns.Add(new DocumentedViewColumn(col.Name, this.GetDesciption(col.ExtendedProperties), col.DataType.Name));
+			}
+
+			return documentedView;
 		}
 
 		/// <inheritdoc />

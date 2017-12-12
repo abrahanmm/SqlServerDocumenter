@@ -50,6 +50,16 @@ namespace SqlServerDocumenterTest.Infraestructure
 			get { return "TableTest"; }
 		}
 
+		public static string ViewName
+		{
+			get { return "ViewTest"; }
+		}
+
+		public static string ProcedureName
+		{
+			get { return "ProcedureTest"; }
+		}
+
 		public static string BackUpFile
 		{
 			get { return Environment.CurrentDirectory + @"\Infraestructure\SqlServerDocumenterTest.bak"; }
