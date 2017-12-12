@@ -195,6 +195,11 @@ namespace SqlServerDocumenter
 			}
 		}
 
+		/// <summary>
+		/// Get an object server of SMO library
+		/// </summary>
+		/// <param name="serverName">Name of the server</param>
+		/// <returns>SMO Server</returns>
 		private Server GetSMOServer(string serverName)
 		{
 			if (this._configuration.Servers.Any(x => x.Name.Equals(serverName)))
@@ -203,6 +208,12 @@ namespace SqlServerDocumenter
 				throw new KeyNotFoundException("Not exist server with the name: " + serverName);
 		}
 
+		/// <summary>
+		/// Get an object database of SMO library
+		/// </summary>
+		/// <param name="serverName">Name of the server</param>
+		/// <param name="databaseName">Name of the database</param>
+		/// <returns>SMO Database</returns>
 		private Database GetSMODatabase(string serverName, string databaseName)
 		{
 			Server server = this.GetSMOServer(serverName);
@@ -212,6 +223,14 @@ namespace SqlServerDocumenter
 				throw new KeyNotFoundException("Not exist database with the name: " + databaseName);
 		}
 
+		/// <summary>
+		/// Get an object table of SMO library
+		/// </summary>
+		/// <param name="serverName">Name of the server</param>
+		/// <param name="databaseName">Name of the database</param>
+		/// <param name="schema">Name of the schema</param>
+		/// <param name="tableName">Name of the table</param>
+		/// <returns>SMO Table</returns>
 		private Table GetSMOTable(string serverName, string databaseName, string schema, string tableName)
 		{
 			Database database = this.GetSMODatabase(serverName, databaseName);
@@ -221,6 +240,14 @@ namespace SqlServerDocumenter
 				throw new KeyNotFoundException($"Not exist Table with the name: {schema}.{tableName}");
 		}
 
+		/// <summary>
+		/// Get an object view of SMO library
+		/// </summary>
+		/// <param name="serverName">Name of the server</param>
+		/// <param name="databaseName">Name of the database</param>
+		/// <param name="schema">Name of the schema</param>
+		/// <param name="viewName">Name of the view</param>
+		/// <returns>SMO View</returns>
 		private View GetSMOView(string serverName, string databaseName, string schema, string viewName)
 		{
 			Database database = this.GetSMODatabase(serverName, databaseName);
@@ -230,6 +257,14 @@ namespace SqlServerDocumenter
 				throw new KeyNotFoundException($"Not exist View with the name: {schema}.{viewName}");
 		}
 
+		/// <summary>
+		/// Get an object procedure of SMO library
+		/// </summary>
+		/// <param name="serverName">Name of the server</param>
+		/// <param name="databaseName">Name of the database</param>
+		/// <param name="schema">Name of the schema</param>
+		/// <param name="procedureName">Name of the procedure</param>
+		/// <returns>SMO Stored Procedure</returns>
 		private StoredProcedure GetSMOProcedure(string serverName, string databaseName, string schema, string procedureName)
 		{
 			Database database = this.GetSMODatabase(serverName, databaseName);
