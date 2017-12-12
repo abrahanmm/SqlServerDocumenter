@@ -33,5 +33,18 @@ namespace SqlServerDocumenterTest
 			//Assert
 			Assert.Contains(databases, d => d.Name.Equals(ObjectMother.DatabaseName));
 		}
+
+		[Fact]
+		public void SaveDatabase()
+		{
+			//Arrange
+			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			//Act
+			DocumentedDatabase database = new DocumentedDatabase(ObjectMother.ServerName, ObjectMother.DatabaseName, "unit test");
+			documenter.SaveDatabase(database);
+			DocumentedDatabase readedDatabase = documenter.GetDatabase(ObjectMother.ServerName, ObjectMother.DatabaseName);
+			//Assert
+			Assert.Equal(readedDatabase.Description, database.Description);
+		}
 	}
 }

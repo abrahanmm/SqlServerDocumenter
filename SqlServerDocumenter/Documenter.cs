@@ -124,25 +124,53 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public DocumentedDatabase SaveDatabase(DocumentedDatabase database)
 		{
-			throw new NotImplementedException();
+			Database smoDatabase = this.GetSMODatabase(database.ServerName, database.Name);
+			this.SaveDescription(smoDatabase, smoDatabase.ExtendedProperties, database.Description);
+			smoDatabase.Alter();
+			return this.GetDatabase(database.ServerName, database.Name);
 		}
 
 		/// <inheritdoc />
 		public DocumentedStoredProcedure SaveStoredProcedure(DocumentedStoredProcedure procedure)
 		{
-			throw new NotImplementedException();
+			StoredProcedure smoProcedure = this.GetSMOProcedure(procedure.ServerName, procedure.DatabaseName, procedure.Schema, procedure.Name);
+			this.SaveDescription(smoProcedure, smoProcedure.ExtendedProperties, procedure.Description);
+			smoProcedure.Alter();
+			return procedure;
 		}
 
 		/// <inheritdoc />
 		public DocumentedTable SaveTable(DocumentedTable table)
 		{
-			throw new NotImplementedException();
+			Table smoTable = this.GetSMOTable(table.ServerName, table.DatabaseName, table.Schema, table.Name);
+			foreach (DocumentedTableColumn col in table.Columns)
+			{
+				if (!smoTable.Columns.Contains(col.Name))
+					throw new KeyNotFoundException("Not exist Column with the name: " + col.Name);
+			}
+			this.SaveDescription(smoTable, smoTable.ExtendedProperties, table.Description);
+
+			foreach (DocumentedTableColumn col in table.Columns)
+			{
+				Column smoCol = smoTable.Columns[col.Name];
+				this.SaveDescription(smoCol, smoCol.ExtendedProperties, col.Description);
+			}
+			smoTable.Alter();
+			return this.GetTable(table.ServerName, table.DatabaseName, table.Schema, table.Name);
 		}
 
 		/// <inheritdoc />
 		public DocumentedView SaveView(DocumentedView view)
 		{
-			throw new NotImplementedException();
+			View smoView = this.GetSMOView(view.ServerName, view.DatabaseName, view.Schema, view.Name);
+			this.SaveDescription(smoView, smoView.ExtendedProperties, view.Description);
+			foreach (DocumentedViewColumn col in view.Columns)
+			{
+				Column smoCol = smoView.Columns[col.Name];
+				this.SaveDescription(smoCol, smoCol.ExtendedProperties, col.Description);
+			}
+			smoView.Alter();
+			return this.GetView(view.ServerName, view.DatabaseName, view.Schema, view.Name);
 		}
 
 		private IEnumerable<DocumentedSimpleObject> GetSimpleObject(string serverName, string databaseName, string query)
@@ -217,6 +245,18 @@ namespace SqlServerDocumenter
 				return string.Empty;
 			else
 				return (extendedProperties.Contains(_configuration.DescriptionPropertyName)) ? extendedProperties[_configuration.DescriptionPropertyName].Value.ToString() : string.Empty;
+		}
+
+		private void SaveDescription(SqlSmoObject sqlSmoObject, ExtendedPropertyCollection extendedProperties, string description)
+		{
+			if (!extendedProperties.Contains(this._configuration.DescriptionPropertyName))
+			{
+				extendedProperties.Add(new ExtendedProperty(sqlSmoObject, this._configuration.DescriptionPropertyName, description));
+			}
+			else
+			{
+				extendedProperties[this._configuration.DescriptionPropertyName].Value = description;
+			}
 		}
 	}
 }

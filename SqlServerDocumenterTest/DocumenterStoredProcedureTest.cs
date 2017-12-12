@@ -32,5 +32,18 @@ namespace SqlServerDocumenterTest
 			//Assert
 			Assert.Single(procedures);
 		}
+
+		[Fact]
+		public void SaveStoredProcedure()
+		{
+			//Arrange
+			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			//Act
+			DocumentedStoredProcedure procedure = new DocumentedStoredProcedure(ObjectMother.ServerName, ObjectMother.DatabaseName, ObjectMother.ProcedureName, "dbo", "unit test");
+			documenter.SaveStoredProcedure(procedure);
+			DocumentedStoredProcedure readedProcedure = documenter.GetStoredProcedure(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.ProcedureName);
+			//Assert
+			Assert.Equal(readedProcedure.Description, procedure.Description);
+		}
 	}
 }

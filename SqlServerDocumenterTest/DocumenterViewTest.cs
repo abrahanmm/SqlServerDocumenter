@@ -32,5 +32,18 @@ namespace SqlServerDocumenterTest
 			//Assert
 			Assert.Single(views);
 		}
+
+		[Fact]
+		public void SaveView()
+		{
+			//Arrange
+			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			//Act
+			DocumentedView view = new DocumentedView(ObjectMother.ServerName, ObjectMother.DatabaseName, ObjectMother.ViewName, "dbo", "unit test");
+			documenter.SaveView(view);
+			DocumentedView readedView = documenter.GetView(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.ViewName);
+			//Assert
+			Assert.Equal(readedView.Description, view.Description);
+		}
 	}
 }
