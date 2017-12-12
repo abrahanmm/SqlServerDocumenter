@@ -21,5 +21,16 @@ namespace SqlServerDocumenterTest
 			//Assert
 			Assert.Equal(procedure.Name, ObjectMother.ProcedureName);
 		}
+
+		[Fact]
+		public void GetStoredProcedures()
+		{
+			//Arrange
+			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			//Act
+			IEnumerable<DocumentedSimpleObject> procedures = documenter.GetStoredProcedures(ObjectMother.ServerName, ObjectMother.DatabaseName);
+			//Assert
+			Assert.Single(procedures);
+		}
 	}
 }

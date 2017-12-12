@@ -21,5 +21,16 @@ namespace SqlServerDocumenterTest
 			//Assert
 			Assert.Equal(view.Name, ObjectMother.ViewName);
 		}
+
+		[Fact]
+		public void GetViews()
+		{
+			//Arrange
+			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			//Act
+			IEnumerable<DocumentedSimpleObject> views = documenter.GetViews(ObjectMother.ServerName, ObjectMother.DatabaseName);
+			//Assert
+			Assert.Single(views);
+		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using SqlServerDocumenter.Entities;
 using Microsoft.SqlServer.Management.Smo;
 using SqlServerDocumenter.Infraestructure;
+using System.Data.SqlClient;
 
 namespace SqlServerDocumenter
 {
@@ -34,13 +35,18 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public IEnumerable<DocumentedDatabase> GetDatabases(string serverName)
 		{
-			throw new NotImplementedException();
+			Server server = this.GetSMOServer(serverName);
+			foreach (Database database in server.Databases)
+			{
+				if (!database.IsSystemObject)
+					yield return new DocumentedDatabase(serverName, database.Name, this.GetDesciption(database.ExtendedProperties));
+			}
 		}
 
 		/// <inheritdoc />
 		public IEnumerable<DocumentedServer> GetServers()
 		{
-			throw new NotImplementedException();
+			return this._configuration.DocumentedServers;
 		}
 
 		/// <inheritdoc />
@@ -53,7 +59,8 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public IEnumerable<DocumentedSimpleObject> GetStoredProcedures(string serverName, string databaseName)
 		{
-			throw new NotImplementedException();
+			return this.GetSimpleObject(serverName, databaseName,
+				"SELECT t.name, SCHEMA_NAME(t.schema_id) as [schema], p.value FROM sys.procedures t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name");
 		}
 
 		/// <inheritdoc />
@@ -89,7 +96,8 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public IEnumerable<DocumentedSimpleObject> GetTables(string serverName, string databaseName)
 		{
-			throw new NotImplementedException();
+			return this.GetSimpleObject(serverName, databaseName,
+				"SELECT t.name, SCHEMA_NAME(t.schema_id) as [schema], p.value FROM sys.tables t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name");
 		}
 
 		/// <inheritdoc />
@@ -109,7 +117,8 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public IEnumerable<DocumentedSimpleObject> GetViews(string serverName, string databaseName)
 		{
-			throw new NotImplementedException();
+			return this.GetSimpleObject(serverName, databaseName,
+				"SELECT t.name, SCHEMA_NAME(t.schema_id) as [schema], p.value FROM sys.views t left join sys.extended_properties p on t.object_id = p.major_id and p.minor_id = 0 and p.name = @description ORDER BY t.name");
 		}
 
 		/// <inheritdoc />
@@ -134,6 +143,28 @@ namespace SqlServerDocumenter
 		public DocumentedView SaveView(DocumentedView view)
 		{
 			throw new NotImplementedException();
+		}
+
+		private IEnumerable<DocumentedSimpleObject> GetSimpleObject(string serverName, string databaseName, string query)
+		{
+			using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
+			{
+				using (SqlCommand command = new SqlCommand(query, conn))
+				{
+					command.Parameters.Add(new SqlParameter("@description", _configuration.DescriptionPropertyName));
+					conn.Open();
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							yield return new DocumentedSimpleObject(serverName, databaseName
+								, reader.GetString(0)
+								, reader.GetString(1)
+								, (reader.IsDBNull(2)) ? null : reader.GetString(2));
+						}
+					}
+				}
+			}
 		}
 
 		private Server GetSMOServer(string serverName)
