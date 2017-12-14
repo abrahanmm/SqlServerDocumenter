@@ -23,14 +23,14 @@ namespace SqlServerDocumenter
 			this._configuration = configuration;
 		}
 
-        /// <summary>
-        /// Contructor to api
-        /// </summary>
-        /// <param name="configuration">Configuration of application</param>
-        public SqlDocumenter(IOptionsSnapshot<SqlDocumenterConfiguration> configuration)
-        {
-            this._configuration = configuration.Value;
-        }
+		/// <summary>
+		/// Contructor to api
+		/// </summary>
+		/// <param name="configuration">Configuration of application</param>
+		public SqlDocumenter(IOptionsSnapshot<SqlDocumenterConfiguration> configuration)
+		{
+			this._configuration = configuration.Value;
+		}
 
 		/// <inheritdoc />
 		public DocumentedDatabase GetDatabase(string serverName, string databaseName)
@@ -183,6 +183,13 @@ namespace SqlServerDocumenter
 			return this.GetView(view.ServerName, view.DatabaseName, view.Schema, view.Name);
 		}
 
+		/// <summary>
+		/// Return a DocumentedSimpleObject from a database query
+		/// </summary>
+		/// <param name="serverName">name of server to connect</param>
+		/// <param name="databaseName">name of the database to query</param>
+		/// <param name="query">query to get the DocumentedSimpleObject</param>
+		/// <returns></returns>
 		private IEnumerable<DocumentedSimpleObject> GetSimpleObject(string serverName, string databaseName, string query)
 		{
 			using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
@@ -284,6 +291,11 @@ namespace SqlServerDocumenter
 				throw new KeyNotFoundException($"Not exist Stored Procedure with the name: {schema}.{procedureName}");
 		}
 
+		/// <summary>
+		/// Search the description in the extendedProperties
+		/// </summary>
+		/// <param name="extendedProperties">ExtendedPropertyCollection that contains the descrption</param>
+		/// <returns>The description found in the ExtendedPropertyCollection</returns>
 		private string GetDesciption(ExtendedPropertyCollection extendedProperties)
 		{
 			if (string.IsNullOrWhiteSpace(this._configuration.DescriptionPropertyName))
@@ -292,6 +304,12 @@ namespace SqlServerDocumenter
 				return (extendedProperties.Contains(_configuration.DescriptionPropertyName)) ? extendedProperties[_configuration.DescriptionPropertyName].Value.ToString() : string.Empty;
 		}
 
+		/// <summary>
+		/// Save the description of a database object
+		/// </summary>
+		/// <param name="sqlSmoObject">database object which will we change</param>
+		/// <param name="extendedProperties">ExtendedPropertyCollection that contains the description</param>
+		/// <param name="description">description to save</param>
 		private void SaveDescription(SqlSmoObject sqlSmoObject, ExtendedPropertyCollection extendedProperties, string description)
 		{
 			if (!extendedProperties.Contains(this._configuration.DescriptionPropertyName))
