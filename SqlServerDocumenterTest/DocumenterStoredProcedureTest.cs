@@ -8,42 +8,41 @@ using Xunit;
 
 namespace SqlServerDocumenterTest
 {
-	public class DocumenterStoredProcedureTest
-	{
-		[Fact]
-		public void GetStoredProcedure()
-		{
-			//Arrange
-			ObjectMother.RestoreDatabase();
-			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
-			//Act
-			DocumentedStoredProcedure procedure = documenter.GetStoredProcedure(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.ProcedureName);
-			//Assert
-			Assert.Equal(procedure.Name, ObjectMother.ProcedureName);
-		}
+    public class DocumenterStoredProcedureTest : IntegrationDatabaseTest
+    {
+        [Fact]
+        public void GetStoredProcedure()
+        {
+            //Arrange
+            IDocumenter documenter = new SqlDocumenter(this.Configuration);
+            //Act
+            DocumentedStoredProcedure procedure = documenter.GetStoredProcedure(this.ServerName, this.DatabaseName, "dbo", this.ProcedureName);
+            //Assert
+            Assert.Equal(procedure.Name, this.ProcedureName);
+        }
 
-		[Fact]
-		public void GetStoredProcedures()
-		{
-			//Arrange
-			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
-			//Act
-			IEnumerable<DocumentedSimpleObject> procedures = documenter.GetStoredProcedures(ObjectMother.ServerName, ObjectMother.DatabaseName);
-			//Assert
-			Assert.Single(procedures);
-		}
+        [Fact]
+        public void GetStoredProcedures()
+        {
+            //Arrange
+            IDocumenter documenter = new SqlDocumenter(this.Configuration);
+            //Act
+            IEnumerable<DocumentedSimpleObject> procedures = documenter.GetStoredProcedures(this.ServerName, this.DatabaseName);
+            //Assert
+            Assert.Single(procedures);
+        }
 
-		[Fact]
-		public void SaveStoredProcedure()
-		{
-			//Arrange
-			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
-			//Act
-			DocumentedStoredProcedure procedure = new DocumentedStoredProcedure(ObjectMother.ServerName, ObjectMother.DatabaseName, ObjectMother.ProcedureName, "dbo", "unit test");
-			documenter.SaveStoredProcedure(procedure);
-			DocumentedStoredProcedure readedProcedure = documenter.GetStoredProcedure(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.ProcedureName);
-			//Assert
-			Assert.Equal(readedProcedure.Description, procedure.Description);
-		}
-	}
+        [Fact]
+        public void SaveStoredProcedure()
+        {
+            //Arrange
+            IDocumenter documenter = new SqlDocumenter(this.Configuration);
+            //Act
+            DocumentedStoredProcedure procedure = new DocumentedStoredProcedure(this.ServerName, this.DatabaseName, this.ProcedureName, "dbo", "unit test");
+            documenter.SaveStoredProcedure(procedure);
+            DocumentedStoredProcedure readedProcedure = documenter.GetStoredProcedure(this.ServerName, this.DatabaseName, "dbo", this.ProcedureName);
+            //Assert
+            Assert.Equal(readedProcedure.Description, procedure.Description);
+        }
+    }
 }

@@ -8,27 +8,26 @@ using Xunit;
 
 namespace SqlServerDocumenterTest
 {
-	public class DocumenterViewTest
-	{
+	public class DocumenterViewTest : IntegrationDatabaseTest
+    {
 		[Fact]
 		public void GetView()
 		{
 			//Arrange
-			ObjectMother.RestoreDatabase();
-			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			IDocumenter documenter = new SqlDocumenter(this.Configuration);
 			//Act
-			DocumentedView view = documenter.GetView(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.ViewName);
+			DocumentedView view = documenter.GetView(this.ServerName, this.DatabaseName, "dbo", this.ViewName);
 			//Assert
-			Assert.Equal(view.Name, ObjectMother.ViewName);
+			Assert.Equal(view.Name, this.ViewName);
 		}
 
 		[Fact]
 		public void GetViews()
 		{
 			//Arrange
-			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			IDocumenter documenter = new SqlDocumenter(this.Configuration);
 			//Act
-			IEnumerable<DocumentedSimpleObject> views = documenter.GetViews(ObjectMother.ServerName, ObjectMother.DatabaseName);
+			IEnumerable<DocumentedSimpleObject> views = documenter.GetViews(this.ServerName, this.DatabaseName);
 			//Assert
 			Assert.Single(views);
 		}
@@ -37,11 +36,11 @@ namespace SqlServerDocumenterTest
 		public void SaveView()
 		{
 			//Arrange
-			IDocumenter documenter = new SqlDocumenter(ObjectMother.Configuration);
+			IDocumenter documenter = new SqlDocumenter(this.Configuration);
 			//Act
-			DocumentedView view = new DocumentedView(ObjectMother.ServerName, ObjectMother.DatabaseName, ObjectMother.ViewName, "dbo", "unit test");
+			DocumentedView view = new DocumentedView(this.ServerName, this.DatabaseName, this.ViewName, "dbo", "unit test");
 			documenter.SaveView(view);
-			DocumentedView readedView = documenter.GetView(ObjectMother.ServerName, ObjectMother.DatabaseName, "dbo", ObjectMother.ViewName);
+			DocumentedView readedView = documenter.GetView(this.ServerName, this.DatabaseName, "dbo", this.ViewName);
 			//Assert
 			Assert.Equal(readedView.Description, view.Description);
 		}

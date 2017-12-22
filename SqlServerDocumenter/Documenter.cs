@@ -192,7 +192,7 @@ namespace SqlServerDocumenter
 		/// <returns></returns>
 		private IEnumerable<DocumentedSimpleObject> GetSimpleObject(string serverName, string databaseName, string query)
 		{
-			using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;"))
+			using (SqlConnection conn = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;Pooling=False;"))
 			{
 				using (SqlCommand command = new SqlCommand(query, conn))
 				{
@@ -208,6 +208,7 @@ namespace SqlServerDocumenter
 								, (reader.IsDBNull(2)) ? null : reader.GetString(2));
 						}
 					}
+                    conn.Close();
 				}
 			}
 		}
