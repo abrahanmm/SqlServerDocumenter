@@ -73,16 +73,16 @@ namespace SqlServerDocumenterTest.Infraestructure
 
         public void Dispose()
         {
-            //using (SqlConnection connection = new SqlConnection("Data Source=" + this.ServerName + "; Initial Catalog=master;Integrated Security=True;"))
-            //{
-            //    String sqlCommandText = @"ALTER DATABASE " + DatabaseName + @" SET SINGLE_USER WITH ROLLBACK IMMEDIATE;DROP DATABASE [" + DatabaseName + "]";
-            //    using (SqlCommand command = new SqlCommand(sqlCommandText, connection))
-            //    {
-            //        connection.Open();
-            //        command.ExecuteNonQuery();
-            //        connection.Close();
-            //    }
-            //}
+            using (SqlConnection connection = new SqlConnection("Data Source=" + this.ServerName + "; Initial Catalog=master;Integrated Security=True;"))
+            {
+                String sqlCommandText = @"ALTER DATABASE " + DatabaseName + @" SET SINGLE_USER WITH ROLLBACK IMMEDIATE;DROP DATABASE [" + DatabaseName + "]";
+                using (SqlCommand command = new SqlCommand(sqlCommandText, connection))
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
         }
 
         public void RestoreDatabase()   
