@@ -6,6 +6,7 @@ using Microsoft.SqlServer.Management.Smo;
 using SqlServerDocumenter.Infraestructure;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace SqlServerDocumenter
 {
@@ -45,12 +46,46 @@ namespace SqlServerDocumenter
 		/// <inheritdoc />
 		public IEnumerable<DocumentedDatabase> GetDatabases(string serverName)
 		{
-			Server server = this.GetSMOServer(serverName);
-			foreach (Database database in server.Databases)
+			StringBuilder query = new StringBuilder();
+			query.AppendLine(@"CREATE TABLE[dbo].[#TempDBs] ( ");
+			query.AppendLine(@"[DBName] NVARCHAR(128) NULL,");
+			query.AppendLine(@"[description] SQL_VARIANT NULL)");
+			query.AppendLine();
+			query.AppendLine(@"EXEC sp_MSforeachdb N'");
+			query.AppendLine(@"USE[?];");
+			query.AppendLine(@"			INSERT INTO #TempDBs");
+			query.AppendLine(@"SELECT '' ? '', value from sys.extended_properties");
+			query.AppendLine(@"  WHERE class = 0 and name = ''@description'''");
+			query.AppendLine();
+			query.AppendLine(@"SELECT d.name, t.description FROM sys.databases d");
+			query.AppendLine(@"LEFT JOIN #TempDBs t");
+			query.AppendLine(@"on d.name = t.DBName");
+			query.AppendLine(@"WHERE owner_sid <> 0x01 AND state = 0");
+			query.AppendLine(@"order by name");
+
+			IList<DocumentedDatabase> databases = new List<DocumentedDatabase>();
+
+			using (SqlConnection conn = new SqlConnection($"Server={serverName};Database=master;Trusted_Connection=True;Pooling=False;"))
 			{
-				if (!database.IsSystemObject)
-					yield return new DocumentedDatabase(serverName, database.Name, this.GetDesciption(database.ExtendedProperties));
+				conn.Open();
+				using (SqlCommand command = new SqlCommand(query.ToString(), conn))
+				{
+					command.Parameters.Add(new SqlParameter("@description", _configuration.DescriptionPropertyName));
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							databases.Add(
+								new DocumentedDatabase(serverName,
+									reader.GetString(0),
+									(reader.IsDBNull(1)) ? null : reader.GetString(1)));
+						}
+					}
+				}
+				conn.Close();
 			}
+
+			return databases;
 		}
 
 		/// <inheritdoc />
