@@ -1,0 +1,20 @@
+﻿<h1>{{serverName}}</h1>
+
+<p>The list of databases of {{serverName}}.</p>
+
+<p *ngIf="!databases"><em>Loading...</em></p>
+
+<table class='table' *ngIf="databases">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let database of databases">
+            <td><a [routerLink]="['/servers', serverName, 'databases', database.name, 'tables']">{{ database.name }}</a></td>
+            <td>{{ database.description }}</td>
+        </tr>
+    </tbody>
+</table>

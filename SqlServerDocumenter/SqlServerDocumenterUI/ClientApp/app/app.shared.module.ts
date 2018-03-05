@@ -9,6 +9,10 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
+import { ServersComponent } from './components/servers/servers.component';
+import { DatabasesComponent } from './components/databases/databases.component';
+import { TablesComponent } from './components/tables/tables.component';
+import { TableDetailComponent } from './components/tables/tableDetail.component';
 
 @NgModule({
     declarations: [
@@ -16,7 +20,11 @@ import { CounterComponent } from './components/counter/counter.component';
         NavMenuComponent,
         CounterComponent,
         FetchDataComponent,
-        HomeComponent
+        HomeComponent,
+        ServersComponent,
+        DatabasesComponent,
+        TablesComponent,
+        TableDetailComponent
     ],
     imports: [
         CommonModule,
@@ -27,6 +35,10 @@ import { CounterComponent } from './components/counter/counter.component';
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
+            { path: 'servers', component: ServersComponent },
+            { path: 'servers/:serverName/databases', component: DatabasesComponent },
+            { path: 'servers/:serverName/databases/:databaseName/tables', component: TablesComponent },
+            { path: 'servers/:serverName/databases/:databaseName/tables/:fullName', component: TableDetailComponent },       
             { path: '**', redirectTo: 'home' }
         ])
     ]

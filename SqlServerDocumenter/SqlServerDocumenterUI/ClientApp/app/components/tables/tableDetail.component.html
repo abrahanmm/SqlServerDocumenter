@@ -1,0 +1,27 @@
+﻿<h1>{{databaseName}}</h1>
+
+<p>The list of tables of {{databaseName}} database and server {{serverName}}.</p>
+
+<p *ngIf="!table"><em>Loading...</em></p>
+
+<div *ngIf="table">
+    <h1>{{table.schema}}.{{table.name}}</h1>
+    <p>{{table.description}}</p>
+</div>
+
+<table class='table' *ngIf="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Data type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let column of table.columns">
+            <td>{{ column.name }}</td>
+            <td>{{ column.description }}</td>
+            <td>{{ column.dataType }}</td>
+        </tr>
+    </tbody>
+</table>
