@@ -31,7 +31,7 @@ import { TableDetailComponent } from './components/tables/tableDetail.component'
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'servers', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
@@ -39,7 +39,7 @@ import { TableDetailComponent } from './components/tables/tableDetail.component'
             { path: 'servers/:serverName/databases', component: DatabasesComponent },
             { path: 'servers/:serverName/databases/:databaseName/tables', component: TablesComponent },
             { path: 'servers/:serverName/databases/:databaseName/tables/:fullName', component: TableDetailComponent },       
-            { path: '**', redirectTo: 'home' }
+            { path: '**', redirectTo: 'servers' }
         ])
     ]
 })

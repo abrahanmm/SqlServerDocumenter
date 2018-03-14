@@ -1,0 +1,29 @@
+﻿.inline-headers h3, .inline-headers h4 {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.inline-headers h3 {
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.well {
+    padding: 0px 0px 0px 20px;
+    color:black;
+}
+
+    .well:hover {
+        background-color: #333;
+    }
+
+    .well:hover a {
+        color: white;
+        text-decoration: none;
+    }
+
+.well a {
+    color: black;
+    text-decoration: none;
+}

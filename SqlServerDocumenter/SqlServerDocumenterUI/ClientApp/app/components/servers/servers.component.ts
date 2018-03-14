@@ -3,7 +3,8 @@ import { Http } from '@angular/http';
 
 @Component({
     selector: 'servers',
-    templateUrl: './servers.component.html'
+    templateUrl: './servers.component.html',
+    styleUrls: ['./servers.component.css']
 })
 export class ServersComponent {
     public servers: Server[];

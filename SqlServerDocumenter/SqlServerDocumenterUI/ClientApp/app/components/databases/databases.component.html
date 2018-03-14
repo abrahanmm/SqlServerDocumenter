@@ -1,6 +1,11 @@
-﻿<h1>{{serverName}}</h1>
+﻿<h1>{{serverName}}</h1><p>The list of databases of {{serverName}}.</p>
 
-<p>The list of databases of {{serverName}}.</p>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a [routerLink]="['/servers']">Servers</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{serverName}}</li>
+    </ol>
+</nav>
 
 <p *ngIf="!databases"><em>Loading...</em></p>
 

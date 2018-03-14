@@ -1,6 +1,16 @@
 ﻿<h1>{{databaseName}}</h1>
-
 <p>The list of tables of {{databaseName}} database and server {{serverName}}.</p>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a [routerLink]="['/servers']">Servers</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{serverName}}</li>
+        <li class="breadcrumb-item"><a [routerLink]="['/servers', serverName, 'databases']">Databases</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{databaseName}}</li>
+        <li class="breadcrumb-item"><a [routerLink]="['/servers', serverName, 'databases']">Tables</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{table.name}}</li>
+    </ol>
+</nav>
 
 <p *ngIf="!table"><em>Loading...</em></p>
 
