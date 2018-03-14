@@ -27,7 +27,6 @@
     <None Remove="ClientApp\app\components\servers\servers.component.ts" />
     <None Remove="ClientApp\app\components\tables\tableDetail.component.ts" />
     <None Remove="ClientApp\app\components\tables\tables.component.ts" />
-    <None Remove="ClientApp\app\components\table\table.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +38,6 @@
     <TypeScriptCompile Include="ClientApp\app\components\servers\servers.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\tables\tableDetail.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\tables\tables.component.ts" />
-    <TypeScriptCompile Include="ClientApp\app\components\table\table.component.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
